@@ -1,12 +1,11 @@
 package com.gradapp.tracker.dto;
 
-import com.gradapp.tracker.model.StageType;
-
 import java.time.LocalDate;
 
 /**
  * Partial update payload for PATCH /api/applications/{id}.
  * Any field left null is left unchanged on the target application.
+ * Stage changes go through POST /api/applications/{id}/stage instead, so they're timestamped in StageHistory.
  */
 public class UpdateApplicationRequest {
 
@@ -16,7 +15,6 @@ public class UpdateApplicationRequest {
     private String jobDescription;
     private String location;
     private LocalDate dateApplied;
-    private StageType currentStage;
     private Boolean cvSubmitted;
     private Boolean coverLetterSubmitted;
     private Boolean applicationAnswersSubmitted;
@@ -68,14 +66,6 @@ public class UpdateApplicationRequest {
 
     public void setDateApplied(LocalDate dateApplied) {
         this.dateApplied = dateApplied;
-    }
-
-    public StageType getCurrentStage() {
-        return currentStage;
-    }
-
-    public void setCurrentStage(StageType currentStage) {
-        this.currentStage = currentStage;
     }
 
     public Boolean getCvSubmitted() {
