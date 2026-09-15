@@ -1,6 +1,7 @@
 package com.gradapp.tracker.dto;
 
 import com.gradapp.tracker.model.Application;
+import com.gradapp.tracker.model.OutcomeStatus;
 import com.gradapp.tracker.model.StageType;
 
 import java.time.Instant;
@@ -12,15 +13,19 @@ public record ApplicationResponse(
         String company,
         String role,
         String jobUrl,
-        String jobDescription,
         String location,
         LocalDate dateApplied,
         StageType currentStage,
         Instant currentStageEnteredAt,
+        OutcomeStatus outcomeStatus,
         boolean cvSubmitted,
         boolean coverLetterSubmitted,
         boolean applicationAnswersSubmitted,
         String notes,
+        boolean snapshotAvailable,
+        Instant snapshotCapturedAt,
+        boolean snapshotManuallyUploaded,
+        boolean snapshotLikelyFaulty,
         Instant createdAt,
         Instant updatedAt
 ) {
@@ -30,15 +35,19 @@ public record ApplicationResponse(
                 app.getCompany(),
                 app.getRole(),
                 app.getJobUrl(),
-                app.getJobDescription(),
                 app.getLocation(),
                 app.getDateApplied(),
                 app.getCurrentStage(),
                 currentStageEnteredAt,
+                app.getOutcomeStatus(),
                 app.isCvSubmitted(),
                 app.isCoverLetterSubmitted(),
                 app.isApplicationAnswersSubmitted(),
                 app.getNotes(),
+                app.getSnapshotFilePath() != null,
+                app.getSnapshotCapturedAt(),
+                app.isSnapshotManuallyUploaded(),
+                app.isSnapshotLikelyFaulty(),
                 app.getCreatedAt(),
                 app.getUpdatedAt()
         );

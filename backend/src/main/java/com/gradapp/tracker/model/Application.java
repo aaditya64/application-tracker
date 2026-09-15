@@ -38,8 +38,12 @@ public class Application {
     private LocalDate dateApplied;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "varchar(30)")
     private StageType currentStage = StageType.NOT_YET_APPLIED;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(30)")
+    private OutcomeStatus outcomeStatus;
 
     @Column(nullable = false)
     private boolean cvSubmitted = false;
@@ -52,6 +56,27 @@ public class Application {
 
     @Lob
     private String notes;
+
+    /** Path (relative to the app's working directory) of a saved PDF snapshot of jobUrl, if captured. */
+    private String snapshotFilePath;
+
+    private Instant snapshotCapturedAt;
+
+    /**
+     * True if the current snapshot was uploaded by hand rather than auto-captured.
+     * columnDefinition includes an explicit DEFAULT: SQLite refuses to add a NOT NULL column
+     * without one to a table that already has rows, which is exactly the table this runs against.
+     */
+    @Column(nullable = false, columnDefinition = "boolean not null default false")
+    private boolean snapshotManuallyUploaded = false;
+
+    /**
+     * True if an auto-captured snapshot looks like it failed silently (a robot-check page, or
+     * suspiciously little content) - a hint to look at it and upload one manually if needed.
+     * Always false for manually uploaded snapshots, which are trusted as-is.
+     */
+    @Column(nullable = false, columnDefinition = "boolean not null default false")
+    private boolean snapshotLikelyFaulty = false;
 
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
@@ -131,6 +156,14 @@ public class Application {
         this.currentStage = currentStage;
     }
 
+    public OutcomeStatus getOutcomeStatus() {
+        return outcomeStatus;
+    }
+
+    public void setOutcomeStatus(OutcomeStatus outcomeStatus) {
+        this.outcomeStatus = outcomeStatus;
+    }
+
     public boolean isCvSubmitted() {
         return cvSubmitted;
     }
@@ -161,6 +194,38 @@ public class Application {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getSnapshotFilePath() {
+        return snapshotFilePath;
+    }
+
+    public void setSnapshotFilePath(String snapshotFilePath) {
+        this.snapshotFilePath = snapshotFilePath;
+    }
+
+    public Instant getSnapshotCapturedAt() {
+        return snapshotCapturedAt;
+    }
+
+    public void setSnapshotCapturedAt(Instant snapshotCapturedAt) {
+        this.snapshotCapturedAt = snapshotCapturedAt;
+    }
+
+    public boolean isSnapshotManuallyUploaded() {
+        return snapshotManuallyUploaded;
+    }
+
+    public void setSnapshotManuallyUploaded(boolean snapshotManuallyUploaded) {
+        this.snapshotManuallyUploaded = snapshotManuallyUploaded;
+    }
+
+    public boolean isSnapshotLikelyFaulty() {
+        return snapshotLikelyFaulty;
+    }
+
+    public void setSnapshotLikelyFaulty(boolean snapshotLikelyFaulty) {
+        this.snapshotLikelyFaulty = snapshotLikelyFaulty;
     }
 
     public Instant getCreatedAt() {

@@ -25,7 +25,7 @@ public class StageHistory {
     private Application application;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "varchar(30)")
     private StageType stage;
 
     @Column(nullable = false)

@@ -1,5 +1,7 @@
 package com.gradapp.tracker.dto;
 
+import com.gradapp.tracker.model.OutcomeStatus;
+
 import java.time.LocalDate;
 
 /**
@@ -12,13 +14,13 @@ public class UpdateApplicationRequest {
     private String company;
     private String role;
     private String jobUrl;
-    private String jobDescription;
     private String location;
     private LocalDate dateApplied;
     private Boolean cvSubmitted;
     private Boolean coverLetterSubmitted;
     private Boolean applicationAnswersSubmitted;
     private String notes;
+    private OutcomeStatus outcomeStatus;
 
     public String getCompany() {
         return company;
@@ -42,14 +44,6 @@ public class UpdateApplicationRequest {
 
     public void setJobUrl(String jobUrl) {
         this.jobUrl = jobUrl;
-    }
-
-    public String getJobDescription() {
-        return jobDescription;
-    }
-
-    public void setJobDescription(String jobDescription) {
-        this.jobDescription = jobDescription;
     }
 
     public String getLocation() {
@@ -98,5 +92,13 @@ public class UpdateApplicationRequest {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public OutcomeStatus getOutcomeStatus() {
+        return outcomeStatus;
+    }
+
+    public void setOutcomeStatus(OutcomeStatus outcomeStatus) {
+        this.outcomeStatus = outcomeStatus;
     }
 }
