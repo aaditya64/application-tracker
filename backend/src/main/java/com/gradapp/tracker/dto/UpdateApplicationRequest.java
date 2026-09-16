@@ -21,6 +21,9 @@ public class UpdateApplicationRequest {
     private Boolean applicationAnswersSubmitted;
     private String notes;
     private OutcomeStatus outcomeStatus;
+    private LocalDate actionDueDate;
+    private String actionNotes;
+    private String actionEmailLink;
 
     public String getCompany() {
         return company;
@@ -100,5 +103,29 @@ public class UpdateApplicationRequest {
 
     public void setOutcomeStatus(OutcomeStatus outcomeStatus) {
         this.outcomeStatus = outcomeStatus;
+    }
+
+    public LocalDate getActionDueDate() {
+        return actionDueDate;
+    }
+
+    public void setActionDueDate(LocalDate actionDueDate) {
+        this.actionDueDate = actionDueDate;
+    }
+
+    public String getActionNotes() {
+        return actionNotes;
+    }
+
+    public void setActionNotes(String actionNotes) {
+        this.actionNotes = actionNotes;
+    }
+
+    public String getActionEmailLink() {
+        return actionEmailLink;
+    }
+
+    public void setActionEmailLink(String actionEmailLink) {
+        this.actionEmailLink = actionEmailLink;
     }
 }

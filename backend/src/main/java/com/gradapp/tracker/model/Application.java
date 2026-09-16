@@ -45,6 +45,15 @@ public class Application {
     @Column(columnDefinition = "varchar(30)")
     private OutcomeStatus outcomeStatus;
 
+    /** User-entered deadline for the current outstanding action (e.g. OA due date). Never inferred. */
+    private LocalDate actionDueDate;
+
+    /** Short free-text note on the nature of the current action (e.g. "Coding test, 90 min"). */
+    private String actionNotes;
+
+    /** Link to the email about the current action, for quick reference. */
+    private String actionEmailLink;
+
     @Column(nullable = false)
     private boolean cvSubmitted = false;
 
@@ -162,6 +171,30 @@ public class Application {
 
     public void setOutcomeStatus(OutcomeStatus outcomeStatus) {
         this.outcomeStatus = outcomeStatus;
+    }
+
+    public LocalDate getActionDueDate() {
+        return actionDueDate;
+    }
+
+    public void setActionDueDate(LocalDate actionDueDate) {
+        this.actionDueDate = actionDueDate;
+    }
+
+    public String getActionNotes() {
+        return actionNotes;
+    }
+
+    public void setActionNotes(String actionNotes) {
+        this.actionNotes = actionNotes;
+    }
+
+    public String getActionEmailLink() {
+        return actionEmailLink;
+    }
+
+    public void setActionEmailLink(String actionEmailLink) {
+        this.actionEmailLink = actionEmailLink;
     }
 
     public boolean isCvSubmitted() {

@@ -109,19 +109,35 @@ public class PageSnapshotService {
 
     /**
      * Chromium's PDF export measures the <html> element's box to decide how much content to
-     * paginate. Some sites set `overflow: hidden` on <html> or <body> (often to block page scroll
-     * while a mobile menu/modal is open, sometimes left engaged by default) even though the real
-     * content is much taller - that clips the PDF to a single viewport's worth of content with
-     * everything past it silently dropped. Forcing both back to their natural height/overflow
-     * before capture only ever loosens a constraint, never hides or removes anything.
+     * paginate. Two related problems both clip content the same way, and this fixes both:
+     *  - Some sites set `overflow: hidden` on <html>/<body> itself (often to block page scroll
+     *    while a mobile menu/modal is open, sometimes left engaged by default).
+     *  - Many "master-detail" layouts (a results list next to a scrolling detail panel - the
+     *    Workday job-board template is a common example) put the real content inside a nested
+     *    container with its own constrained height and internal scrollbar, independent of the
+     *    page root. The root looks fine; the panel silently truncates everything past its own
+     *    scroll boundary.
+     * This walks every element and un-clips any whose visible box is smaller than its actual
+     * content (scrollHeight > clientHeight) and whose overflow would hide the rest - which by
+     * construction only ever reveals more content, never hides or removes anything, so unlike the
+     * fixed/sticky-hiding pass above this can't blank a page by being too aggressive.
      */
-    private static final String UNCLIP_ROOT_HEIGHT_SCRIPT = """
+    private static final String UNCLIP_SCROLL_CONTAINERS_SCRIPT = """
             () => {
-              for (const el of [document.documentElement, document.body]) {
+              const unclip = (el) => {
                 el.style.setProperty('overflow', 'visible', 'important');
                 el.style.setProperty('height', 'auto', 'important');
                 el.style.setProperty('max-height', 'none', 'important');
-              }
+              };
+              unclip(document.documentElement);
+              unclip(document.body);
+              document.querySelectorAll('body *').forEach((el) => {
+                const overflowY = window.getComputedStyle(el).overflowY;
+                if ((overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'hidden')
+                    && el.scrollHeight > el.clientHeight + 20) {
+                  unclip(el);
+                }
+              });
             }
             """;
 
@@ -205,7 +221,7 @@ public class PageSnapshotService {
                 }
                 page.evaluate(AUTO_SCROLL_SCRIPT);
                 page.evaluate(HIDE_FIXED_ELEMENTS_SCRIPT);
-                page.evaluate(UNCLIP_ROOT_HEIGHT_SCRIPT);
+                page.evaluate(UNCLIP_SCROLL_CONTAINERS_SCRIPT);
                 page.emulateMedia(new Page.EmulateMediaOptions().setMedia(Media.SCREEN));
 
                 byte[] pdf = page.pdf(new Page.PdfOptions()

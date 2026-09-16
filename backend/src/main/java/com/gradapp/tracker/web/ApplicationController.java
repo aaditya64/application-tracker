@@ -175,7 +175,7 @@ public class ApplicationController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
                 .body(new FileSystemResource(file));
     }
 
@@ -241,6 +241,15 @@ public class ApplicationController {
         }
         if (request.getOutcomeStatus() != null) {
             application.setOutcomeStatus(request.getOutcomeStatus());
+        }
+        if (request.getActionDueDate() != null) {
+            application.setActionDueDate(request.getActionDueDate());
+        }
+        if (request.getActionNotes() != null) {
+            application.setActionNotes(request.getActionNotes());
+        }
+        if (request.getActionEmailLink() != null) {
+            application.setActionEmailLink(request.getActionEmailLink());
         }
     }
 }
